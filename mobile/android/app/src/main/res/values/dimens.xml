@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="page_pad">16dp</dimen>
+    <dimen name="card_radius">14dp</dimen>
+    <dimen name="bubble_radius">16dp</dimen>
+    <dimen name="composer_radius">16dp</dimen>
+    <dimen name="btn_radius">12dp</dimen>
+</resources>

@@ -555,11 +555,18 @@ class OctopServer:
             TrajectoryLiveBus(),
         )
 
+        from octop.infra.push.service import MobilePushService  # noqa: PLC0415
+
+        mobile_push = MobilePushService(
+            repo=self.services.repos.push_device_repo,
+            config=config.push,
+        )
         gateway = Gateway(
             agent_manager=registry,
             repos=self.services.repos,
             trajectory_service=trajectory_service,
             instance_id=self.instance_id,
+            mobile_push=mobile_push,
         )
         await gateway.boot(serve_background=self._serve_background)
 

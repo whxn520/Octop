@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/slideTrack"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@drawable/bg_slide_track"
+    android:clipChildren="true">
+
+    <FrameLayout
+        android:id="@+id/slideFill"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_slide_fill" />
+
+    <TextView
+        android:id="@+id/slideHint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingHorizontal="44dp"
+        android:textColor="@color/n7"
+        android:textSize="13sp" />
+
+    <FrameLayout
+        android:id="@+id/slideThumb"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="start|center_vertical"
+        android:background="@drawable/bg_slide_thumb"
+        android:elevation="2dp">
+
+        <ImageView
+            android:id="@+id/slideThumbIcon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_chevron_right" />
+    </FrameLayout>
+</FrameLayout>

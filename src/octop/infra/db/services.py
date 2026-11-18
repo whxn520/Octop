@@ -28,6 +28,7 @@ from octop.infra.db.repos.proactive_care_config import ProactiveCareConfigRepo
 from octop.infra.db.repos.profile_avatars import ProfileAvatarRepo
 from octop.infra.db.repos.providers import ProviderRepo
 from octop.infra.db.repos.published_experts import PublishedExpertRepo
+from octop.infra.db.repos.push_devices import PushDeviceRepo
 from octop.infra.db.repos.resource_group_grants import ResourceGroupGrantRepo
 from octop.infra.db.repos.secrets import SecretRepo
 from octop.infra.db.repos.sessions import SessionRepo
@@ -87,6 +88,7 @@ class RepoBundle:
     auth_challenge_repo: AuthChallengeRepo
     profile_avatar_repo: ProfileAvatarRepo
     control_file_repo: ControlFileRepo
+    push_device_repo: PushDeviceRepo
 
     @classmethod
     def from_pool(cls, db: DatabasePool) -> RepoBundle:
@@ -127,6 +129,7 @@ class RepoBundle:
             auth_challenge_repo=AuthChallengeRepo(db),
             profile_avatar_repo=ProfileAvatarRepo(db),
             control_file_repo=ControlFileRepo(db),
+            push_device_repo=PushDeviceRepo(db),
         )
 
 
@@ -263,6 +266,10 @@ class SharedServices:
     @property
     def control_file_repo(self) -> ControlFileRepo:
         return self.repos.control_file_repo
+
+    @property
+    def push_device_repo(self) -> PushDeviceRepo:
+        return self.repos.push_device_repo
 
     def avatars(self, kind: str) -> Any:
         from octop.infra.users.profile_avatar import AvatarNamespace

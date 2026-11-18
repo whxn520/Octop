@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand">#3B82F6</color>
+    <color name="brand_hover">#2563EB</color>
+    <color name="brand_active">#1D4ED8</color>
+    <color name="brand_light">#DBEAFE</color>
+    <color name="brand_lighter">#EFF6FF</color>
+    <color name="brand_soft">#93C5FD</color>
+    <color name="page_bg">#F6FAFF</color>
+    <color name="page_bg_mid">#F8FAFC</color>
+    <color name="cta">#22C55E</color>
+    <color name="error">#EF4444</color>
+    <color name="error_bg">#FEF2F2</color>
+    <color name="n1">#FFFFFF</color>
+    <color name="n2">#F8FAFC</color>
+    <color name="n3">#F1F5F9</color>
+    <color name="n4">#E2E8F0</color>
+    <color name="n5">#CBD5E1</color>
+    <color name="n6">#94A3B8</color>
+    <color name="n7">#64748B</color>
+    <color name="n8">#475569</color>
+    <color name="n9">#334155</color>
+    <color name="n10">#1E293B</color>
+    <color name="bubble_user">#3B82F6</color>
+    <color name="bubble_assistant">#FFFFFF</color>
+    <color name="bubble_system">#FEF3C7</color>
+    <!-- Welcome quick-card pastel chips (aligned with dashboard QUICK_CARD_PASTEL_COLORS). -->
+    <color name="quick_pastel_0">#E8F4FF</color>
+    <color name="quick_pastel_1">#DCFCE7</color>
+    <color name="quick_pastel_2">#FEF3C7</color>
+    <color name="quick_pastel_3">#FCE7F3</color>
+    <color name="quick_pastel_4">#F1F5F9</color>
+    <color name="quick_pastel_5">#EEF2FF</color>
+    <color name="quick_pastel_6">#ECFEFF</color>
+    <color name="quick_pastel_7">#FFF1F2</color>
+    <color name="quick_pastel_ink">#8A0F172A</color>
+</resources>

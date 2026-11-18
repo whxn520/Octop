@@ -124,6 +124,13 @@ class CapabilitiesConfig:
 
 
 @dataclass(frozen=True)
+class PushConfig:
+    """Mobile system push (FCM). Empty credentials disable sending."""
+
+    fcm_credentials_json: str = ""
+
+
+@dataclass(frozen=True)
 class OctopConfig:
     bind_host: str = "127.0.0.1"
     port: int = 8088
@@ -142,6 +149,7 @@ class OctopConfig:
     tls: TlsConfig = field(default_factory=TlsConfig)
     backup: BackupConfig = field(default_factory=BackupConfig)
     capabilities: CapabilitiesConfig = field(default_factory=CapabilitiesConfig)
+    push: PushConfig = field(default_factory=PushConfig)
     max_upload_mb: int = DEFAULT_MAX_UPLOAD_MB
     browser_idle_timeout_minutes: int = DEFAULT_BROWSER_IDLE_TIMEOUT_MINUTES
 
@@ -235,6 +243,16 @@ def _parse_backup_section(raw: object) -> BackupConfig:
         include_plugins=bool(raw.get("include_plugins", defaults.include_plugins)),
         include_knowledge=bool(raw.get("include_knowledge", defaults.include_knowledge)),
         include_chats=bool(raw.get("include_chats", defaults.include_chats)),
+    )
+
+
+def _parse_push_section(raw: object) -> PushConfig:
+    if raw is None:
+        return PushConfig()
+    if not isinstance(raw, dict):
+        raise ValueError("config.push must be an object")
+    return PushConfig(
+        fcm_credentials_json=str(raw.get("fcm_credentials_json") or "").strip(),
     )
 
 
@@ -525,6 +543,8 @@ def validate_persisted_config(raw: dict[str, Any]) -> None:
         _parse_backup_section(raw.get("backup"))
     if "capabilities" in raw:
         _parse_capabilities_section(raw.get("capabilities"))
+    if "push" in raw:
+        _parse_push_section(raw.get("push"))
 
 
 @cache
@@ -714,6 +734,12 @@ def load_config(path: Path) -> OctopConfig:
             include_chats=_coerce_bool("OCTOP_BACKUP_INCLUDE_CHATS", v, backup.include_chats),
         )
 
+    push = _parse_push_section(raw.get("push"))
+    if (v := os.environ.get("OCTOP_PUSH_FCM_CREDENTIALS_JSON")) or (
+        v := os.environ.get("OCTOP_PUSH_FCM_CREDENTIALS_PATH")
+    ):
+        push = replace(push, fcm_credentials_json=v.strip())
+
     return OctopConfig(
         bind_host=merged["bind_host"],
         port=int(merged["port"]),
@@ -731,6 +757,7 @@ def load_config(path: Path) -> OctopConfig:
         tls=_parse_tls_section(raw.get("tls")),
         backup=backup,
         capabilities=capabilities,
+        push=push,
         max_upload_mb=int(merged.get("max_upload_mb", DEFAULT_MAX_UPLOAD_MB)),
         browser_idle_timeout_minutes=max(
             0,

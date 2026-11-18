@@ -63,6 +63,10 @@ OPENAPI_TAGS: list[dict[str, str]] = [
         "description": "First-run wizard: create the admin user and optional LLM provider.",
     },
     {"name": "auth", "description": "Sign in, sign out, and manage the current user profile."},
+    {
+        "name": "push",
+        "description": "Mobile push device registration (FCM). Used by the native chat client.",
+    },
     {"name": "health", "description": "Liveness probe for load balancers and monitoring."},
     {"name": "users", "description": "Admin user management, roles, and user groups."},
     {

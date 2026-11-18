@@ -47,6 +47,7 @@ from octop.infra.utils.locale import DEFAULT_LOCALE, Locale
 if TYPE_CHECKING:
     from octop.infra.agents.manager import AgentManager
     from octop.infra.db.services import RepoBundle
+    from octop.infra.push.service import MobilePushService
 
 logger = logging.getLogger(__name__)
 
@@ -119,11 +120,13 @@ class Gateway:
         repos: RepoBundle,
         trajectory_service: Any | None = None,
         instance_id: str | None = None,
+        mobile_push: MobilePushService | None = None,
     ) -> None:
         self._agent_manager = agent_manager
         self._repos = repos
         self._instance_id = instance_id or uuid.uuid4().hex
         self._trajectory_service = trajectory_service
+        self._mobile_push = mobile_push
         self._thread_registry = ThreadRegistry(
             session_repo=repos.session_repo,
             thread_repo=repos.thread_repo,
@@ -150,9 +153,18 @@ class Gateway:
             session_repo=repos.session_repo,
             thread_repo=repos.thread_repo,
         )
+        if self._mobile_push is not None:
+            self._mobile_push.replace_repo(repos.push_device_repo)
         if self._processor is not None:
             self._processor.replace_thread_message_repo(repos.thread_message_repo)
             self._processor.hitl_coordinator.session_policies.replace_repo(repos.thread_repo)
+
+    def set_mobile_push(self, mobile_push: MobilePushService | None) -> None:
+        self._mobile_push = mobile_push
+
+    @property
+    def mobile_push(self) -> MobilePushService | None:
+        return self._mobile_push
 
     @property
     def ws_hub(self) -> WebSocketHub:
@@ -583,7 +595,7 @@ class Gateway:
         agent_id: str,
         text: str,
     ) -> None:
-        """Fan out a toast payload to the owner's dashboard notification sockets."""
+        """Fan out a toast payload to dashboard sockets and mobile push devices."""
         if not text.strip():
             return
         row = self._agent_manager.get_row(agent_id)
@@ -599,6 +611,22 @@ class Gateway:
                 "agent_name": agent_name,
             },
         )
+        if self._mobile_push is not None:
+            try:
+                await self._mobile_push.notify_user(
+                    user_id=session.user_id,
+                    agent_id=agent_id,
+                    thread_id=session.thread_id,
+                    agent_name=agent_name,
+                    text=text,
+                )
+            except Exception:
+                logger.warning(
+                    "mobile push fan-out failed agent_id=%s user_id=%s",
+                    agent_id,
+                    session.user_id,
+                    exc_info=True,
+                )
 
     def _require_channel_manager(self) -> ChannelManager:
         if self._channel_manager is None:
